@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Copy to ~/Library/LaunchAgents/ and replace /PATH/TO/shorts-engine, then:
+     launchctl load -w ~/Library/LaunchAgents/com.shorts-engine.daemon.plist -->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.shorts-engine.daemon</string>
+  <key>WorkingDirectory</key><string>/PATH/TO/shorts-engine</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/PATH/TO/shorts-engine/.venv/bin/shorts-engine</string>
+    <string>daemon</string>
+    <string>--at</string><string>06:30</string>
+  </array>
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><true/>
+  <key>StandardOutPath</key><string>/PATH/TO/shorts-engine/data/daemon.log</string>
+  <key>StandardErrorPath</key><string>/PATH/TO/shorts-engine/data/daemon.log</string>
+</dict>
+</plist>

@@ -1,0 +1,17 @@
+# /etc/systemd/system/shorts-engine.service
+# sudo systemctl daemon-reload && sudo systemctl enable --now shorts-engine
+[Unit]
+Description=shorts-engine daily Shorts pipeline
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=shorts
+WorkingDirectory=/opt/shorts-engine
+ExecStart=/opt/shorts-engine/.venv/bin/shorts-engine daemon --at 06:30
+Restart=on-failure
+RestartSec=60
+
+[Install]
+WantedBy=multi-user.target

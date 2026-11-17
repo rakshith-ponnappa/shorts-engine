@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+
+# Secrets and local config: never commit
+.env
+.env.*
+!.env.example
+config.yaml
+secrets/
+client_secret*.json
+token*.json
+
+# Runtime data
+data/*
+!data/.gitkeep
+*.db
+assets/backgrounds/*
+!assets/backgrounds/.gitkeep
+
+.DS_Store

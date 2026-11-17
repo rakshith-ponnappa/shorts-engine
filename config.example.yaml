@@ -1,0 +1,92 @@
+# Copy to config.yaml and edit. Secrets go in .env, never here.
+timezone: UTC                   # IANA name, e.g. Europe/London or America/New_York
+
+campaign:
+  start_date: 2026-11-17
+  end_date: 2026-12-04          # inclusive; nothing is scheduled after this date
+  ramp:
+    start_per_day: 1            # day-1 volume (conservative default)
+    max_per_day: 3              # ceiling; raise only after reviewing results and your channel's policy standing
+    ramp_days: 14               # days to go from start_per_day to max_per_day
+  publish_window: ["08:00", "23:00"]   # local time; uploads are spread across this window
+  min_minutes_between_uploads: 8
+  mix:                          # share of the daily quota per content type
+    clip: 0.7
+    ai_original: 0.3
+  max_clips_per_source_per_day: 6
+
+paths:
+  data_dir: data
+  inbox_dir: data/inbox         # drop your own long-form videos here
+  assets_dir: assets            # assets/backgrounds/*.mp4 = licensed b-roll for AI originals
+
+# Rights registry. Nothing is clipped unless it comes from one of these entries.
+sources:
+  - key: my-channel
+    kind: own
+    path: data/inbox
+  # - key: licensed-creator
+  #   kind: licensed
+  #   permission_ref: "Clipping program terms, accepted 2026-11-10 (link/email id)"
+  #   attribution: "Credit: @creatorx"
+  #   urls:
+  #     - https://www.youtube.com/watch?v=XXXXXXXXXXX
+
+trends:
+  region_codes: [IN, US]
+  category_ids: ["20", "24", "17"]   # mostPopular charts (Gaming, Entertainment, Sports); [] disables charts
+  max_results_per_query: 50
+  # Niche trends: most-viewed uploads of the last search_days days per keyword.
+  # Each keyword = 1 search.list call; keep len(search_keywords) * 24/refresh_hours under 100/day.
+  search_keywords: []
+  search_days: 7
+  search_results_per_keyword: 25
+  search_language: en
+  exclude_terms: []             # drop search hits whose title/tags contain these (e.g. game names)
+  seed_keywords: []
+  refresh_hours: 6
+
+clip:
+  min_seconds: 20
+  max_seconds: 58
+  candidates_for_llm: 12
+
+render:
+  ffmpeg_bin: auto              # "auto" prefers an ffmpeg build with libass (ffmpeg-full)
+  width: 1080
+  height: 1920
+  fps: 30
+  font: Arial
+  caption_words_per_chunk: 3
+  hook_seconds: 3.0
+
+llm:
+  provider: none                # none | openai | azure
+  model: gpt-4o-mini            # Azure: your deployment name
+  tts_model: gpt-4o-mini-tts
+  tts_voice: alloy
+  commentary_voiceover: true    # spoken commentary intro on clips (needs llm provider)
+
+whisper:
+  model: small
+  device: auto
+  compute_type: int8
+
+youtube:
+  channel_id: ""                # uploads are refused unless the login belongs to this channel (UC...)
+  account: ""                   # Google account email, pre-selected on the login screen
+  channel_focus: ""             # one line on what the channel is about; keeps AI copy on-brand
+  client_secrets: secrets/client_secret.json
+  token_file: secrets/token.json
+  category_id: "24"
+  made_for_kids: false
+  default_language: en
+  notify_subscribers: false     # don't ping subscribers for every automated upload
+  extra_tags: [shorts]
+
+guardrails:
+  require_rights: true
+  max_text_similarity: 0.6      # reject clips whose transcript overlaps a past upload this much
+  max_time_overlap: 0.5         # reject clips overlapping an earlier clip of the same source
+  review_ai_originals: true     # AI originals wait for `shorts-engine review` before upload
+  synthetic_disclosure: true    # mark AI originals as containing synthetic media

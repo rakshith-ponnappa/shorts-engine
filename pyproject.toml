@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "shorts-engine"
+version = "0.1.0"
+description = "Trend-aware Shorts pipeline: find trends, clip rights-cleared sources or generate originals, caption, and schedule YouTube uploads."
+requires-python = ">=3.10"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Rakshith Ponnappa" }]
+keywords = ["youtube-api", "shorts", "whisper", "ffmpeg", "openai", "content-automation", "guardrails"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+  "pyyaml>=6.0",
+  "google-api-python-client>=2.120",
+  "google-auth-oauthlib>=1.2",
+  "google-auth-httplib2>=0.2",
+]
+
+[project.optional-dependencies]
+llm = ["openai>=1.40"]
+transcribe = ["faster-whisper>=1.0"]
+download = ["yt-dlp>=2024.8"]
+all = ["openai>=1.40", "faster-whisper>=1.0", "yt-dlp>=2024.8"]
+dev = ["pytest>=8"]
+
+[project.urls]
+Homepage = "https://github.com/rakshith-ponnappa/shorts-engine"
+Issues = "https://github.com/rakshith-ponnappa/shorts-engine/issues"
+
+[project.scripts]
+shorts-engine = "shorts_engine.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
